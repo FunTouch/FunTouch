@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="bottom|end|top"
+    android:orientation="vertical"
+    android:stretchColumns="1" >
+
+<TableRow>
+    <TextView 
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="活动名称："
+        android:textSize="16sp"
+        />
+    <EditText
+        
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="请填写活动名称"
+        android:selectAllOnFocus="true" 
+        />
+</TableRow>
+
+<TableRow>
+<TextView
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:text="名额限制："
+    android:textSize="16sp"
+    />
+<EditText
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:inputType="number"
+    android:hint="请输入允许报名的人数上限"
+    />
+</TableRow>
+
+
+<TextView
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:text="请选择要读取的信息："
+    android:textSize="16sp"
+    />
+<LinearLayout android:layout_gravity="center_horizontal"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    >
+</LinearLayout>
+
+<TableRow>
+    <CheckBox
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:checked="true"
+        android:text="姓名" />
+</TableRow>
+<TableRow>
+<CheckBox
+    android:layout_width="169dp"
+    android:layout_height="wrap_content"
+    android:checked="true"
+    android:text="学号" />
+</TableRow>
+<TableRow>
+<CheckBox android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:text="联系方式"
+    android:checked="true"
+    />
+</TableRow>
+<TableRow>
+<CheckBox android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:text="邮箱"
+    android:checked="true"
+    />
+</TableRow>
+<TableRow>
+<CheckBox android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:text="QQ"
+    android:checked="true"
+    />
+
+</TableRow>
+
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
+
+    <Button
+        android:id="@+id/btn_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="编辑" />
+
+    <Button
+        android:id="@+id/btn_ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:text="完成" />
+
+    <Button
+        android:id="@+id/btn_use"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/btn_edit"
+        android:text="使用" />
+
+    <Button
+        android:id="@+id/btn_del"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/btn_use"
+        android:text="删除" />
+
+    <Button
+        android:id="@+id/btn_see"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/btn_del"
+        android:text="查看" />
+
+</RelativeLayout>
+
+</TableLayout>
