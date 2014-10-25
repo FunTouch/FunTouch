@@ -6,6 +6,7 @@ package com.funtouch.util;
  * @Package tcl.nfc.phone.util
  * @ClassName LogUtil
  * @Description yes
+ * @see me
  * @author skyseraph00@163.com
  * @date 2013-5-16 9:22:43
  * @version V1.2
