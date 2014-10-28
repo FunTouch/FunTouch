@@ -14,7 +14,7 @@
         android:textSize="16sp"
         />
     <EditText
-        
+        android:id="@+id/edit_UserName"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:hint="请填写真实姓名"
@@ -24,12 +24,14 @@
 
 <TableRow>
     <TextView
+        
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="密码："
         android:textSize="16sp"
         />
     <EditText
+        android:id="@+id/edit_UserPassword"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:hint="请填写6-12位密码"
