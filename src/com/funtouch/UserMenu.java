@@ -13,16 +13,21 @@ import android.widget.Button;
 
 public class UserMenu extends Activity{
 
+	private Button btnVote = null;
+	private Button btnSignUp = null;
+	private Button btnAuthenticate = null;
+	private Button btnFlyer = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		Button btnVote = null;
-	    Button btnSignUp = null;
+		
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.user_menu);
 		 
-		btnVote=(Button)findViewById(R.id.btn_vote);
+		init();
+		
+		
 		btnVote.setOnClickListener(new OnClickListener(){
 	        	public void onClick(View v){
 	        		Intent intent=new Intent();
@@ -32,7 +37,7 @@ public class UserMenu extends Activity{
 	        	}
 	        });
 	    
-		btnSignUp=(Button)findViewById(R.id.btn_sign_up);
+		
 		btnSignUp.setOnClickListener(new OnClickListener(){
 	        	public void onClick(View v){
 	        		Intent intent=new Intent();
@@ -41,7 +46,32 @@ public class UserMenu extends Activity{
 		
 	        	}
 	        });
+		
+		btnFlyer.setOnClickListener(new OnClickListener(){
+        	public void onClick(View v){
+        		Intent intent=new Intent();
+        		intent.setClass(UserMenu.this, FlyerList.class);
+        		startActivity(intent);
+	
+        	}
+        });
+		
+		btnAuthenticate.setOnClickListener(new OnClickListener(){
+        	public void onClick(View v){
+        		Intent intent=new Intent();
+        		intent.setClass(UserMenu.this, ActAuthenticate.class);
+        		startActivity(intent);
+	
+        	}
+        });
 	     
+	}
+
+	private void init() {
+		btnVote = (Button)findViewById(R.id.btn_vote);
+		btnSignUp = (Button)findViewById(R.id.btn_sign_up);
+		btnAuthenticate = (Button)findViewById(R.id.btn_act_authenticate);
+		btnFlyer = (Button)findViewById(R.id.btn_nfc_flyer);
 	}
 
 }
