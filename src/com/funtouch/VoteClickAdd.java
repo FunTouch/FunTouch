@@ -13,14 +13,16 @@ import android.widget.Button;
 
 public class VoteClickAdd extends Activity{
 
+	private Button btnClickAdd = null;
+	private Button btnUse = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		Button btnClickAdd=null;
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.vote_click_add);
-		btnClickAdd=(Button)findViewById(R.id.btn_click_add);
+		
+		init();
+		
 		btnClickAdd.setOnClickListener(new OnClickListener(){
 	        	public void onClick(View v){
 	        		Intent intent=new Intent();
@@ -29,7 +31,21 @@ public class VoteClickAdd extends Activity{
 	         	}
 	        });
 		
-	
+		btnUse.setOnClickListener(new OnClickListener(){
+        	public void onClick(View v){
+        		Intent intent=new Intent();
+        		intent.setClass(VoteClickAdd.this, VoteUse.class);
+        		startActivity(intent);
+         	}
+        });
+		
+		
+	}
+
+	private void init() {
+		btnClickAdd = (Button)findViewById(R.id.btn_click_add);
+		btnUse = (Button)findViewById(R.id.btn_use);
+		
 	}
    
 }

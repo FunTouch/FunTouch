@@ -24,6 +24,13 @@
             </intent-filter>
         </activity>
         
+         <activity android:name=".AboutActivity"
+            android:label="关于活动"></activity>
+          <activity android:name=".SeeActivity"
+            android:label="查看活动"></activity>
+          <activity android:name=".GetAward"
+            android:label="领奖"></activity>
+        
         <activity android:name=".Login"
             android:label="登陆"></activity>
         <activity android:name=".UserMenu"
@@ -40,6 +47,8 @@
             android:label="发起投票"></activity>
         <activity android:name=".VoteEdit"
             android:label="投票"></activity>
+        <activity android:name=".VoteUse"
+            android:label="使用"></activity>
         
         <activity android:name=".SignUpClickAdd"
             android:label="发起报名"></activity>
@@ -49,6 +58,59 @@
             android:label="查看"></activity>
         <activity android:name=".SignUpUse"
             android:label="使用"></activity>
+        
+		<activity android:name=".FlyerList"
+            android:label="无纸传单"></activity>
+		<activity android:name=".FlyerNew"
+            android:label="新建传单"></activity>
+		<activity android:name=".FlyerNewSelectStyle"
+            android:label="选择版式"></activity>
+
+		<activity android:name=".FlyerUse"
+            android:label="启用"></activity>
+		<activity android:name=".FlyerSee"
+            android:label="预览"></activity>
+		
+		<activity android:name=".ActAuthenticate"
+            android:label="验证功能"></activity>
+		
+		<activity android:name=".GameList"
+            android:label="游戏"></activity>
+		<activity android:name=".GameUndercoverSetting"
+            android:label="设置"></activity>
+		<activity android:name=".GameUndercoverDetail"
+            android:label="已分配的角色"></activity>
+		<activity android:name=".GameUndercoverGetRole"
+            android:label="获得角色"></activity>
+		
+		<activity android:name=".GameWerewolfSetting"
+            android:label="设置"></activity>
+		<activity android:name=".GameWerewolfDetail"
+            android:label="已分配的角色"></activity>
+		<activity android:name=".GameWerewolfGetRole"
+            android:label="获得角色"></activity>
+		
+		<activity android:name=".SocialFirstUse"
+            android:label="欢迎"></activity>
+		<activity android:name=".SocialMyCard"
+            android:label="我的名片"></activity>
+		<activity android:name=".SocialCreateCardMenu"
+            android:label="创建名片"></activity>
+		<activity android:name=".SocialCreateCardEdit"
+            android:label="编辑"></activity>
+		<activity android:name=".SocialCreateCardImportContact"
+           	android:label="导入联系人"></activity>
+		<activity android:name=".SocialCardUse"
+            android:label="运行中"></activity>
+		
+		<activity android:name=".FunTouchProfile"
+            android:label="FunTouch简介"></activity>
+		<activity android:name=".FunTouchTag"
+            android:label="NFC标签"></activity>
+		<activity android:name=".FunTouchTagWify"
+            android:label="Wify标签"></activity>
+		<activity android:name=".FunTouchTagOther"
+            android:label="定制"></activity>
 
           
     </application>
