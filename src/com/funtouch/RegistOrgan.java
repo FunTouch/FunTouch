@@ -19,7 +19,7 @@ import com.funtouch.Data;
 public class RegistOrgan extends Activity {
 	private RadioGroup rg ;
 	private RadioButton tgw,xsh,sl,gs,dq,rw,fy ;
-	private String temp = "共青团暨南大学珠海校区工作委员会" ;
+	private String temp = "团工委" ;
 	private Data application;
 	
 
@@ -43,7 +43,7 @@ public class RegistOrgan extends Activity {
 			
 			public void onCheckedChanged(RadioGroup group, int checkedId) { 
         	if(checkedId == R.id.tgw)
-        		temp="共青团暨南大学珠海校区工作委员会";
+        		temp="团工委";
         	else if(checkedId==R.id.xsh)
         		temp="校区学生会";
         	else if(checkedId==R.id.sl)
@@ -56,6 +56,7 @@ public class RegistOrgan extends Activity {
         		temp="人文学院团委学生会";
         	else if(checkedId==R.id.fy)
         		temp="翻译学院团委学生会";
+        	application.setTemp(temp);
         }
 		});
 		application.setTemp(temp);

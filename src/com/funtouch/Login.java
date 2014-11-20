@@ -1,5 +1,6 @@
 package com.funtouch;
 
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -43,6 +44,7 @@ public class Login extends Activity {
 		application = (Data) this.getApplicationContext(); 
 		userLogin = getSPUser();
 		//showToast(read.getString("member", ""));
+		
 		btnLogin.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				if(userName.getText().toString().trim().equals("")||password.getText().toString().trim().equals("")){
@@ -54,7 +56,7 @@ public class Login extends Activity {
 						int flag = 0;
 						for(int i=0;i<userLogin.size();i++)	
 						{
-							if(userName.getText().toString().equals(userLogin.get(i).getName())&& password.getText().toString().equals(userLogin.get(i).getPassword()))
+							if(userName.getText().toString().equals(userLogin.get(i).getName())&& MD5(password.getText().toString()).equals(userLogin.get(i).getPassword()))
 							{
 								showToast("登录成功");
 								Intent intent = new Intent();
@@ -87,6 +89,32 @@ public class Login extends Activity {
 		});
 	}
 	
+	// MD5加密，32位 
+		public static String MD5(String str) { 
+			MessageDigest md5 = null; 
+			try { 
+				md5 = MessageDigest.getInstance("MD5"); 
+			} catch (Exception e) { 
+				e.printStackTrace(); 
+				return ""; 
+			} 
+			char[] charArray = str.toCharArray(); 
+			byte[] byteArray = new byte[charArray.length]; 
+			for (int i = 0; i < charArray.length; i++) { 
+				byteArray[i] = (byte) charArray[i]; 
+			} 
+			byte[] md5Bytes = md5.digest(byteArray); 
+			StringBuffer hexValue = new StringBuffer(); 
+			for (int i = 0; i < md5Bytes.length; i++) { 
+				int val = ((int) md5Bytes[i]) & 0xff; 
+				if (val < 16) { 
+					hexValue.append("0"); 
+				} 
+				hexValue.append(Integer.toHexString(val)); 
+		} 
+			return hexValue.toString(); 
+		}
+	
 	//提示类
 	private void showToast(CharSequence msg) {
 		Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
@@ -107,7 +135,7 @@ public class Login extends Activity {
 				{
 					UserInfo userinfo = new UserInfo();
 					String[] user = str.split("/");
-					userinfo.initialize(user[0],user[1],user[2],user[3],user[4],user[5],user[6]);// 
+					userinfo.initialize(user[0],(user[1]),user[2],user[3],user[4],user[5],user[6]);// 
 					userInfos.add(userinfo);
 				}
 			} else
@@ -115,7 +143,7 @@ public class Login extends Activity {
 			{
 				UserInfo userinfo = new UserInfo();
 				String[] user = userinfos.split("/");
-				userinfo.initialize(user[0],user[1],user[2],user[3],user[4],user[5],user[6]);// 
+				userinfo.initialize(user[0],(user[1]),user[2],user[3],user[4],user[5],user[6]);// 
 				userInfos.add(userinfo);
 			}
 			return userInfos;

@@ -1,5 +1,6 @@
 package com.funtouch;
 
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -64,7 +65,31 @@ public class RegistActName extends Activity{
 		Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
 	}
 	
-	
+	// MD5加密，32位 
+	public static String MD5(String str) { 
+		MessageDigest md5 = null; 
+		try { 
+			md5 = MessageDigest.getInstance("MD5"); 
+		} catch (Exception e) { 
+			e.printStackTrace(); 
+			return ""; 
+		} 
+		char[] charArray = str.toCharArray(); 
+		byte[] byteArray = new byte[charArray.length]; 
+		for (int i = 0; i < charArray.length; i++) { 
+			byteArray[i] = (byte) charArray[i]; 
+		} 
+		byte[] md5Bytes = md5.digest(byteArray); 
+		StringBuffer hexValue = new StringBuffer(); 
+		for (int i = 0; i < md5Bytes.length; i++) { 
+			int val = ((int) md5Bytes[i]) & 0xff; 
+			if (val < 16) { 
+				hexValue.append("0"); 
+			} 
+			hexValue.append(Integer.toHexString(val)); 
+	} 
+		return hexValue.toString(); 
+	}
 
 	private void saveSPUser(String userName, String password, String mb, String userclass, String uphone, String organ, String actname)
 	{
@@ -79,7 +104,7 @@ public class RegistActName extends Activity{
 		for (UserInfo userinfos: info)
 		{	
 			String name = userinfos.getName();
-			String userinfo = userinfos.getName() + "/" + userinfos.getPassword() + "/" + userinfos.getMailbox() + "/" + userinfos.getUserClass() + "/" + userinfos.getUserPhone() + "/" + userinfos.getRegistOrgan() + "/" + userinfos.getRegistActName();
+			String userinfo = userinfos.getName() + "/" + (userinfos.getPassword()) + "/" + userinfos.getMailbox() + "/" + userinfos.getUserClass() + "/" + userinfos.getUserPhone() + "/" + userinfos.getRegistOrgan() + "/" + userinfos.getRegistActName();
 			if (alluserinfos == null)
 			{
 				alluserinfos = userinfo;
@@ -101,9 +126,9 @@ public class RegistActName extends Activity{
   		if (alluserinfos == null || alluserinfos.length() <= 0)
   		{
   			UserInfo userInfo = new UserInfo();
-  			userInfo.initialize(userName, password, mb, userclass, uphone, organ, actname);
+  			userInfo.initialize(userName, MD5(password), mb, userclass, uphone, organ, actname);
   			application.getInfo().add(userInfo);
-  			//showToast("hehe");
+  			showToast("注册成功,返回登陆页面");
   		}
   		else // 有数据
 		{	
@@ -123,7 +148,6 @@ public class RegistActName extends Activity{
 							Intent intent=new Intent();
 			        		intent.setClass(RegistActName.this, RegistInfo.class);
 			        		startActivity(intent);
-			        		showToast("此用户名已存在!请重新注册!");
 			        		System.exit(0);
 				  		}
 		  				break;
@@ -134,8 +158,9 @@ public class RegistActName extends Activity{
 				if(flag == 0)
 				{
 					UserInfo userInfo = new UserInfo();
-			    	userInfo.initialize(userName, password, mb, userclass, uphone, organ, actname);
+			    	userInfo.initialize(userName, MD5(password), mb, userclass, uphone, organ, actname);
 			    	application.getInfo().add(userInfo);
+			    	showToast("注册成功,返回登陆页面");
 				}
 			}
 			else if(!alluserinfos.contains(","))
@@ -150,13 +175,13 @@ public class RegistActName extends Activity{
 					Intent intent=new Intent();
 	        		intent.setClass(RegistActName.this, RegistInfo.class);
 	        		startActivity(intent);
-	        		showToast("此用户名已存在!请重新注册!");
 	        		System.exit(0);
 		  		}
 				else{
 					UserInfo userInfo = new UserInfo();
-					userInfo.initialize(userName, password, mb, userclass, uphone, organ, actname);
+					userInfo.initialize(userName, MD5(password), mb, userclass, uphone, organ, actname);
 					application.getInfo().add(userInfo);
+					showToast("注册成功,返回登陆页面");
 				}
 			}
 			

@@ -27,7 +27,7 @@
 	<RadioButton android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
 	android:id="@+id/tgw"
-	android:text="共青团暨南大学珠海校区工作委员会"
+	android:text="团工委"
 	android:checked="true"/>
 	   
 	   <RadioButton android:layout_width="wrap_content"
