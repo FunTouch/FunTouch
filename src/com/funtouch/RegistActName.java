@@ -52,9 +52,9 @@ public class RegistActName extends Activity{
 	        		name = registActName.getText().toString();
 	        		saveSPUser(application.getUserName(),application.getPassword(),application.getUserMailbox(),application.getUserClass(),application.getUserPhone(),application.getTemp(),name);
 	        		//showToast(application.getTemp());
-	        		Intent intent=new Intent();
-	        		intent.setClass(RegistActName.this, Login.class);
-	        		startActivity(intent);
+	        		//Intent intent=new Intent();
+	        		//intent.setClass(RegistActName.this, Login.class);
+	        		//startActivity(intent);
 	        		}
 		
 	        	}
@@ -99,8 +99,10 @@ public class RegistActName extends Activity{
 			if (save != "")
 				alluserinfos = save;
 		}
-		checkUser(userName,password,mb,userclass,uphone,organ,actname);// 检查是否已存在相同用户信息
+		int flag = checkUser(userName,password,mb,userclass,uphone,organ,actname);// 检查是否已存在相同用户信息
 		List<UserInfo> info = application.getInfo();
+		if (flag == 1)
+		{
 		for (UserInfo userinfos: info)
 		{	
 			String name = userinfos.getName();
@@ -114,21 +116,28 @@ public class RegistActName extends Activity{
 				alluserinfos += "," + userinfo;
 			}		
 		}
+		
 
 		Editor editor = user.edit();// 编辑器记录
 		editor.putString("member", alluserinfos);
 		editor.commit();// 编辑器提交保存
+		Intent intent=new Intent();
+		intent.setClass(RegistActName.this, Login.class);
+		startActivity(intent);
+		}
 	}
 
-  	public void checkUser(String userName, String password, String mb, String userclass, String uphone, String organ, String actname)
+  	public int checkUser(String userName, String password, String mb, String userclass, String uphone, String organ, String actname)
   	{
-  		int flag = 0;
+  		int flag = 0,flag1 = 0;
   		if (alluserinfos == null || alluserinfos.length() <= 0)
   		{
   			UserInfo userInfo = new UserInfo();
   			userInfo.initialize(userName, MD5(password), mb, userclass, uphone, organ, actname);
   			application.getInfo().add(userInfo);
   			showToast("注册成功,返回登陆页面");
+  			flag1 = 1;
+  			return flag1;
   		}
   		else // 有数据
 		{	
@@ -145,10 +154,12 @@ public class RegistActName extends Activity{
 		  				if (flag >= 0)
 				  		{// 已存在
 							showToast("此用户名已存在!请重新注册!");
+				  			flag1 = 0;
+				  			//return flag1;
 							Intent intent=new Intent();
 			        		intent.setClass(RegistActName.this, RegistInfo.class);
 			        		startActivity(intent);
-			        		System.exit(0);
+			        		
 				  		}
 		  				break;
 		  			}
@@ -161,6 +172,9 @@ public class RegistActName extends Activity{
 			    	userInfo.initialize(userName, MD5(password), mb, userclass, uphone, organ, actname);
 			    	application.getInfo().add(userInfo);
 			    	showToast("注册成功,返回登陆页面");
+			    
+		  			flag1 = 1;
+		  			return flag1;
 				}
 			}
 			else if(!alluserinfos.contains(","))
@@ -172,20 +186,25 @@ public class RegistActName extends Activity{
 		  		{// 已存在
 		  			//application.getInfo().remove(position);
 					showToast("此用户名已存在!请重新注册!");
+		  			flag1 = 0;
+		  			//return flag1;
 					Intent intent=new Intent();
 	        		intent.setClass(RegistActName.this, RegistInfo.class);
 	        		startActivity(intent);
-	        		System.exit(0);
+	        		//finish();
 		  		}
 				else{
 					UserInfo userInfo = new UserInfo();
 					userInfo.initialize(userName, MD5(password), mb, userclass, uphone, organ, actname);
 					application.getInfo().add(userInfo);
 					showToast("注册成功,返回登陆页面");
+		  			flag1 = 1;
+		  			return flag1;
 				}
 			}
 			
 		}
+		return flag1;
   		
   	}
  }
