@@ -18,6 +18,7 @@ public class MainActivity extends Activity {
 	private Button btnAct = null;
 	private Button btnSetting = null;
 	private Button btnGame = null;
+	private Button btnLogin = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +68,14 @@ public class MainActivity extends Activity {
 			}
 		});
 		
+		btnLogin.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				Intent intent = new Intent();
+				intent.setClass(MainActivity.this, Login.class);
+				startActivity(intent);
+			}
+		});
 	}
 
 	private void init() {
@@ -75,6 +84,7 @@ public class MainActivity extends Activity {
 		btnSocial = (Button) findViewById(R.id.btn_social);
 		btnSetting = (Button) findViewById(R.id.btn_setting);
 		btnGame = (Button) findViewById(R.id.btn_game_help);
+		btnLogin = (Button) findViewById(R.id.btn_login);
 
 	}
 	

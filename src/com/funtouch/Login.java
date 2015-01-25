@@ -3,6 +3,7 @@ package com.funtouch;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import android.app.Activity;
@@ -11,10 +12,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.view.View;
@@ -26,32 +29,58 @@ import com.funtouch.Data;
 public class Login extends Activity {
 	private SharedPreferences read ;
 	private EditText userName, password;
-	public Data application;
+	//public Data application;
 	List<UserInfo> userLogin= new ArrayList<UserInfo>();
+	private DataRetriever dataRetriever = new DataRetriever();
 	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+        .detectDiskReads()
+        .detectDiskWrites()
+        .detectAll()   // or .detectAll() for all detectable problems
+        .penaltyLog()
+        .build());
+     StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+        .detectLeakedSqlLiteObjects()
+        .detectLeakedClosableObjects()
+        .penaltyLog()
+        .penaltyDeath()
+        .build());
+     
+     
 		Button btnLogin = null;
 		Button btnRegist = null;
-		read = getSharedPreferences("user",Context.MODE_PRIVATE);
+		//read = getSharedPreferences("user",Context.MODE_PRIVATE);
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
 		userName = (EditText) findViewById(R.id.edit_UserName);
 		password = (EditText) findViewById(R.id.edit_UserPassword);
 		btnLogin = (Button) findViewById(R.id.btn_login);
-		application = (Data) this.getApplicationContext(); 
-		userLogin = getSPUser();
-		//showToast(read.getString("member", ""));
+		//application = (Data) this.getApplicationContext(); 
+		//userLogin = getSPUser();
 		
 		btnLogin.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				if(userName.getText().toString().trim().equals("")||password.getText().toString().trim().equals("")){
-					showToast("请输入账户和密码..");
+					showToast("请输入账户和密码");
 				}
 				else{
-					if( userLogin!=null || userLogin.size()>0 )	
+					int flag = dataRetriever.login(userName.getText().toString(),MD5(password.getText().toString()));
+					if(flag == 200)
+					{
+						showToast("登录成功");
+						Intent intent = new Intent();
+						intent.setClass(Login.this, UserMenu.class);
+						startActivity(intent);
+					}
+					else if(flag == 410)
+					{
+						showToast("登录失败");
+					}
+					/*if( userLogin!=null || userLogin.size()>0 )	
 					{
 						int flag = 0;
 						for(int i=0;i<userLogin.size();i++)	
@@ -71,6 +100,7 @@ public class Login extends Activity {
 					}
 					else
 						showToast("用户名或密码错误,请重新输入");
+						*/
 					
 					
 				}
@@ -120,7 +150,7 @@ public class Login extends Activity {
 		Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
 	}
 	
-	public List<UserInfo> getSPUser()
+	/*public List<UserInfo> getSPUser()
 	{
 		List<UserInfo> userInfos = new ArrayList<UserInfo>();// 用于保存用户列表信息
 		String userinfos = read.getString("member", "");// 取得所有用户信息
@@ -151,7 +181,7 @@ public class Login extends Activity {
 	  {
 		  return userInfos;
 	  }
-	}
+	}*/
 }
 
 

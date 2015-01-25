@@ -8,22 +8,47 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+
+
+import android.os.StrictMode;
 import com.funtouch.UserInfo;
+
+import java.security.MessageDigest;
 import java.util.*;
+
 import com.funtouch.Data;
 
 
 public class RegistInfo extends Activity{
 	private EditText userName, password,passwordAgain, userMailbox, userClass, userPhone;
 	public Data application;
+	private List<Speaker> listSpeaker;
+	private DataRetriever dataRetriever = new DataRetriever();
+	private SimpleAdapter adapter;
+	private List<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+        .detectDiskReads()
+        .detectDiskWrites()
+        .detectAll()   // or .detectAll() for all detectable problems
+        .penaltyLog()
+        .build());
+     StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+        .detectLeakedSqlLiteObjects()
+        .detectLeakedClosableObjects()
+        .penaltyLog()
+        .penaltyDeath()
+        .build());
+     
 		Button btnNext=null;
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
@@ -59,23 +84,66 @@ public class RegistInfo extends Activity{
 	        			showToast("电话号码不符合规则,请重新输入");
 	        		}
 	        		else{
-	        			application.setUserName(userName.getText().toString());
-	        			application.setPassword(password.getText().toString());
-	        			application.setUserMailbox(userMailbox.getText().toString());
-	        			application.setUserClass(userClass.getText().toString());
-	        			application.setUserPhone(userPhone.getText().toString());
-	        			Intent intent=new Intent();
-	        			intent.setClass(RegistInfo.this, RegistOrgan.class);
-	        			startActivity(intent);
+	        			//application.setUserName(userName.getText().toString());
+	        			//application.setPassword(password.getText().toString());
+	        			//application.setUserMailbox(userMailbox.getText().toString());
+	        			//application.setUserClass(userClass.getText().toString());
+	        			//application.setUserPhone(userPhone.getText().toString());
+	        			//Intent intent=new Intent();
+	        			//intent.setClass(RegistInfo.this, RegistOrgan.class);
+	        			//startActivity(intent);
+	        			int flag = dataRetriever.regist(userName.getText().toString(),MD5(password.getText().toString()),
+	        					userMailbox.getText().toString(),userClass.getText().toString(),userPhone.getText().toString());
+	        			if(flag == 200)
+	        			{
+	        				showToast("注册成功,返回登陆页面");
+	        				Intent intent=new Intent();
+	        				intent.setClass(RegistInfo.this, Login.class);
+	        				startActivity(intent);
 	        			}
-	        		
-	
+	        			if(flag == 401)
+	        			{
+	        				showToast("此用户名已存在!请重新注册!");
+	        			}
+	        			if(flag == 0)
+	        			{
+	        				showToast("用户名不能为中文!");
+	        			}
+	        			}
+	     
 	}
 	        });
 		
 	}
+	// 显示Toast
 	private void showToast(CharSequence msg) {
 		Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
 	}
+	
+	// MD5加密，32位 
+		public static String MD5(String str) { 
+			MessageDigest md5 = null; 
+			try { 
+				md5 = MessageDigest.getInstance("MD5"); 
+			} catch (Exception e) { 
+				e.printStackTrace(); 
+				return ""; 
+			} 
+			char[] charArray = str.toCharArray(); 
+			byte[] byteArray = new byte[charArray.length]; 
+			for (int i = 0; i < charArray.length; i++) { 
+				byteArray[i] = (byte) charArray[i]; 
+			} 
+			byte[] md5Bytes = md5.digest(byteArray); 
+			StringBuffer hexValue = new StringBuffer(); 
+			for (int i = 0; i < md5Bytes.length; i++) { 
+				int val = ((int) md5Bytes[i]) & 0xff; 
+				if (val < 16) { 
+					hexValue.append("0"); 
+				} 
+				hexValue.append(Integer.toHexString(val)); 
+		} 
+			return hexValue.toString(); 
+		}
 	
 }
