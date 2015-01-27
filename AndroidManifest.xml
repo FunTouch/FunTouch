@@ -2,7 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.funtouch"
     android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionName="1.0" 
+    android:launchMode="singleTop">
+    
 
     <uses-sdk
         android:minSdkVersion="16"
@@ -11,7 +13,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
-        android:name="com.funtouch.Data"
+        
+        android:name="com.funtouch.Cookie"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -28,6 +31,8 @@
         
          <activity android:name=".AboutActivity"
             android:label="关于活动"></activity>
+         <activity android:name=".ActDetails"
+            android:label="活动详情"></activity>
           <activity android:name=".SeeActivity"
             android:label="查看活动"></activity>
           <activity android:name=".GetAward"
@@ -36,10 +41,10 @@
         <activity android:name=".Login"
             android:label="登陆"></activity>
         <activity android:name=".UserMenu"
-            android:label="KK"></activity>
+            android:label="用户菜单"></activity>
         
-        <activity android:name=".RegistOrgan"
-            android:label="活动信息"></activity>
+        <activity android:name=".CreateActivity"
+            android:label="创建活动"></activity>
         <activity android:name=".RegistInfo"
             android:label="注册"></activity>
         <activity android:name=".RegistActName"
@@ -110,7 +115,7 @@
 		<activity android:name=".FunTouchTag"
             android:label="NFC标签"></activity>
 		<activity android:name=".FunTouchTagWify"
-            android:label="Wify标签"></activity>
+            android:label="Wifi标签"></activity>
 		<activity android:name=".FunTouchTagOther"
             android:label="定制"></activity>
 

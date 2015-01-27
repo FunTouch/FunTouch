@@ -28,18 +28,20 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 import android.widget.Toast;
+import com.funtouch.Cookie;
 
-public class DataRetriever {
+public class DataRetriever extends Activity{
+	public Cookie application ;            //application为全局变量	
+
 	/*public List<Speaker> retrieveAllSpeakers() {
-
 		String url = "http://pyfun.sinaapp.com/test/get";
 		List<Speaker> speakerArrayList = new ArrayList<Speaker>();
 		HttpGet httpGet = new HttpGet(url);
 		HttpClient httpClient = new DefaultHttpClient();
 
 		try {
-			HttpResponse httpResponse = httpClient.execute(httpGet);
-			HttpEntity httpEntity = httpResponse.getEntity();
+			//HttpResponse httpResponse = httpClient.execute(httpGet);
+			//HttpEntity httpEntity = httpResponse.getEntity();
 			String jsonString = EntityUtils.toString(httpEntity);
 			JSONArray jsonArray = new JSONArray(jsonString);
 			Speaker speaker;
@@ -73,6 +75,8 @@ public class DataRetriever {
 	
 	//注册
 	public int regist(String name, String password, String mailbox, String userclass,String phone){
+		
+		
 		String url = "http://pyfun.sinaapp.com/regist";
 		
 		List <NameValuePair> params = new ArrayList <NameValuePair>();
@@ -93,16 +97,15 @@ public class DataRetriever {
 
 			String jsonString = EntityUtils.toString(httpEntity);
 			JSONObject result = new JSONObject(jsonString);
-			String res = result.getString("code");
+			String code = result.getString("code");
 			
-			//JSONObject jsonObj = jsonArray.getJSONObject(1);
-			//String res = jsonArray.getString(0);
-			Log.i("b", res);	
+			Log.i("b", code);	
 			
-			if (res.equals("200"))
+			if (code.equals("200"))      //注册成功
 				return 200;
-			if (res.equals("401"))
+			if (code.equals("401"))      //用户名已存在
 				return 401;
+			
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -119,33 +122,40 @@ public class DataRetriever {
 	
 	//登陆
 	public int login(String name, String password){
+		
 		String url = "http://pyfun.sinaapp.com/login";
 		
 		List <NameValuePair> params = new ArrayList <NameValuePair>();
 		params.add(new BasicNameValuePair("name", name));
-		params.add(new BasicNameValuePair("password", password));
-		
+		params.add(new BasicNameValuePair("password", password));	
+			
 		HttpPost httpPost = new HttpPost(url);
 		
 		HttpClient httpClient = new DefaultHttpClient();
 		try {
-
 			httpPost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 			HttpEntity httpEntity = httpResponse.getEntity();
 
 			String jsonString = EntityUtils.toString(httpEntity);
-			JSONObject result = new JSONObject(jsonString);
-			String res = result.getString("code");
+			JSONObject object = new JSONObject(jsonString);
+			String code = object.getString("code");
+			JSONObject result = new JSONObject(object.getString("result"));
+			String res = result.getString("cookie");
+			application.getInstance().setCookie(res);          //把cookie信息保存到application		
 			
 			//JSONObject jsonObj = jsonArray.getJSONObject(1);
 			//String res = jsonArray.getString(0);
-			Log.i("b", res);	
+			Log.i("login", code);	
+			//Log.i("b", application.getInstance().getCookie());	
 			
-			if (res.equals("200"))
+			if (code.equals("200"))      //登陆成功
 				return 200;
-			if (res.equals("410"))
+			if (code.equals("410"))      //无效用户名
 				return 410;
+			if (code.equals("411"))      //密码错误
+				return 411;
+			
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -159,6 +169,163 @@ public class DataRetriever {
 		
 		return 0;
 	}
+	
+	//创建活动
+		public int createAct(String cookie,String name, String info, String time, String place,String type,String org,String actor,String limit){
+	
+			String url = "http://pyfun.sinaapp.com/act/create";
+			
+			//JSONObject tableAct ;
+			StringBuffer sb = new StringBuffer();  
+			
+			sb.append("{"+"\"cookie\":"+"\""+cookie+"\""+","+"\"data\":");
+			sb.append("{"+"\"name\":"+"\""+name+"\""+","+"\"info\":"+"\""+info+"\""+","+"\"time\":"+"\""+time+"\""+","
+					+"\"place\":"+"\""+place+"\""+","+"\"type\":"+"\""+type+"\""+","+"\"org\":"+"\""+org+"\""+
+					","+"\"actor\":"+"\""+actor+"\""+","+"\"limit\":"+"\""+limit+"\""+"}");
+			//sb.deleteCharAt(sb.length()-1);
+			sb.append("}");                 			//JSON字符串打包完毕
+			
+			List <NameValuePair> params = new ArrayList <NameValuePair>();
+			params.add(new BasicNameValuePair("post", sb.toString()));
+			
+			HttpPost httpPost = new HttpPost(url);
+			
+			HttpClient httpClient = new DefaultHttpClient();
+			try {
+
+				httpPost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+				HttpResponse httpResponse = httpClient.execute(httpPost);
+				HttpEntity httpEntity = httpResponse.getEntity();
+
+				String jsonString = EntityUtils.toString(httpEntity);
+				JSONObject result = new JSONObject(jsonString);
+				String code = result.getString("code");
+				
+				Log.i("act", code);	
+				
+				if (code.equals("200"))      //创建成功
+					return 200;
+				if (code.equals("420"))      //创建失败
+					return 420;
+				if (code.equals("404"))      //未登陆
+					return 404;
+				
+			} catch (ClientProtocolException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			return 0;
+		}
+		
+		//简要活动信息
+		public int seeActinfo(String cookie){
+			
+			String url = "http://pyfun.sinaapp.com/act/myact";
+			
+			List <NameValuePair> params = new ArrayList <NameValuePair>();
+			params.add(new BasicNameValuePair("cookie", cookie));
+			
+			HttpPost httpPost = new HttpPost(url);
+			
+			HttpClient httpClient = new DefaultHttpClient();
+			try {
+
+				httpPost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+				HttpResponse httpResponse = httpClient.execute(httpPost);
+				HttpEntity httpEntity = httpResponse.getEntity();
+
+				String jsonString = EntityUtils.toString(httpEntity);
+				JSONObject object = new JSONObject(jsonString);
+				
+				String rows = object.getString("message");
+				String code = object.getString("code");
+				//String res = object.getString("result");
+				
+				//JSONArray jsonArray = new JSONArray(jsonString);
+				//JSONArray result = new JSONArray(info);
+				
+				Log.i("b", code);	
+				
+				if (code.equals("200"))      //获取活动成功
+					return 200;
+				if (code.equals("420"))      //获取失败
+					return 420;
+				if (code.equals("404"))      //用户未登陆
+					return 404;
+				
+			} catch (ClientProtocolException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			return 0;
+		}
+		//添加活动信息到Speaker
+		public List<Speaker> retrieveAllSpeakers(String cookie) {
+			String url = "http://pyfun.sinaapp.com/act/myact";
+			List<Speaker> speakerArrayList = new ArrayList<Speaker>();
+			HttpPost httpPost = new HttpPost(url);
+			HttpClient httpClient = new DefaultHttpClient();
+			List <NameValuePair> params = new ArrayList <NameValuePair>();
+			params.add(new BasicNameValuePair("cookie", cookie));
+
+			try {
+				httpPost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+				HttpResponse httpResponse = httpClient.execute(httpPost);
+				HttpEntity httpEntity = httpResponse.getEntity();
+				
+				String jsonString = EntityUtils.toString(httpEntity);
+				JSONObject object = new JSONObject(jsonString);		
+				String res = object.getString("result");
+				
+				Log.i("b", res);	
+				JSONArray jsonArray = new JSONArray(res);
+				Speaker speaker;
+				
+				for (int i = 0; i < jsonArray.length(); i++) {
+
+					JSONObject jsonObj = jsonArray.getJSONObject(i);
+					speaker = new Speaker();
+
+					speaker.setName(jsonObj.getString("name"));
+					speaker.setInfo(jsonObj.getString("info"));
+					speaker.setTime(jsonObj.getString("time"));
+					speaker.setPlace(jsonObj.getString("place"));
+					speaker.setType(jsonObj.getString("type"));
+					speaker.setOrg(jsonObj.getString("org"));
+					speaker.setActor(jsonObj.getString("actor"));
+					speaker.setLimit(jsonObj.getString("limit"));
+
+					speakerArrayList.add(speaker);
+
+				}
+
+			} catch (ClientProtocolException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			return speakerArrayList;
+		}
 
 	// check the Internet connection
 	public boolean isNetworkConnected(Context context) {

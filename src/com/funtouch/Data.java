@@ -2,7 +2,6 @@ package com.funtouch;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import android.app.Application;
 

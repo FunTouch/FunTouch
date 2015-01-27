@@ -28,7 +28,7 @@ import com.funtouch.Data;
 
 public class RegistInfo extends Activity{
 	private EditText userName, password,passwordAgain, userMailbox, userClass, userPhone;
-	public Data application;
+	//public Data application;
 	private List<Speaker> listSpeaker;
 	private DataRetriever dataRetriever = new DataRetriever();
 	private SimpleAdapter adapter;
@@ -60,7 +60,7 @@ public class RegistInfo extends Activity{
 		userClass = (EditText) findViewById(R.id.edit_Class);
 		userPhone = (EditText) findViewById(R.id.edit_Phone);
 		btnNext=(Button)findViewById(R.id.btn_next);
-		application = (Data) this.getApplicationContext(); 
+		//application = (Data) this.getApplicationContext(); 
 		btnNext.setOnClickListener(new OnClickListener(){
 	        	public void onClick(View v){
 	        		if(userName.getText().toString().trim().equals("") || password.getText().toString().trim().equals("")
@@ -92,11 +92,11 @@ public class RegistInfo extends Activity{
 	        			//Intent intent=new Intent();
 	        			//intent.setClass(RegistInfo.this, RegistOrgan.class);
 	        			//startActivity(intent);
-	        			int flag = dataRetriever.regist(userName.getText().toString(),MD5(password.getText().toString()),
+	        			int flag = dataRetriever.regist(userName.getText().toString(),MD5.Encode(password.getText().toString()),
 	        					userMailbox.getText().toString(),userClass.getText().toString(),userPhone.getText().toString());
 	        			if(flag == 200)
 	        			{
-	        				showToast("注册成功,返回登陆页面");
+	        				showToast("注册成功,返回登陆页面!");
 	        				Intent intent=new Intent();
 	        				intent.setClass(RegistInfo.this, Login.class);
 	        				startActivity(intent);
@@ -107,7 +107,7 @@ public class RegistInfo extends Activity{
 	        			}
 	        			if(flag == 0)
 	        			{
-	        				showToast("用户名不能为中文!");
+	        				showToast("异常错误!");
 	        			}
 	        			}
 	     
@@ -120,30 +120,5 @@ public class RegistInfo extends Activity{
 		Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
 	}
 	
-	// MD5加密，32位 
-		public static String MD5(String str) { 
-			MessageDigest md5 = null; 
-			try { 
-				md5 = MessageDigest.getInstance("MD5"); 
-			} catch (Exception e) { 
-				e.printStackTrace(); 
-				return ""; 
-			} 
-			char[] charArray = str.toCharArray(); 
-			byte[] byteArray = new byte[charArray.length]; 
-			for (int i = 0; i < charArray.length; i++) { 
-				byteArray[i] = (byte) charArray[i]; 
-			} 
-			byte[] md5Bytes = md5.digest(byteArray); 
-			StringBuffer hexValue = new StringBuffer(); 
-			for (int i = 0; i < md5Bytes.length; i++) { 
-				int val = ((int) md5Bytes[i]) & 0xff; 
-				if (val < 16) { 
-					hexValue.append("0"); 
-				} 
-				hexValue.append(Integer.toHexString(val)); 
-		} 
-			return hexValue.toString(); 
-		}
 	
 }

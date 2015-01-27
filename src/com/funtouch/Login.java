@@ -17,21 +17,22 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import com.funtouch.UserInfo;
-import com.funtouch.Data;
+import com.funtouch.MD5;
 
 public class Login extends Activity {
-	private SharedPreferences read ;
+	//private SharedPreferences read ;
 	private EditText userName, password;
+	public Cookie application ; 
 	//public Data application;
-	List<UserInfo> userLogin= new ArrayList<UserInfo>();
+	//List<UserInfo> userLogin= new ArrayList<UserInfo>();
 	private DataRetriever dataRetriever = new DataRetriever();
+	String cookie = application.getInstance().getCookie();
 	
 
 	@Override
@@ -52,7 +53,6 @@ public class Login extends Activity {
      
 		Button btnLogin = null;
 		Button btnRegist = null;
-		//read = getSharedPreferences("user",Context.MODE_PRIVATE);
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
@@ -62,93 +62,65 @@ public class Login extends Activity {
 		//application = (Data) this.getApplicationContext(); 
 		//userLogin = getSPUser();
 		
+		if(cookie!=null)
+		{
+			Intent intent = new Intent();
+			intent.setClass(Login.this, UserMenu.class);
+			startActivity(intent);
+			this.finish(); 
+		}
+		
 		btnLogin.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				if(userName.getText().toString().trim().equals("")||password.getText().toString().trim().equals("")){
 					showToast("请输入账户和密码");
 				}
 				else{
-					int flag = dataRetriever.login(userName.getText().toString(),MD5(password.getText().toString()));
+					int flag = dataRetriever.login(userName.getText().toString(),MD5.Encode(password.getText().toString()));
 					if(flag == 200)
 					{
 						showToast("登录成功");
 						Intent intent = new Intent();
 						intent.setClass(Login.this, UserMenu.class);
 						startActivity(intent);
+						finish();  
 					}
 					else if(flag == 410)
 					{
-						showToast("登录失败");
-					}
-					/*if( userLogin!=null || userLogin.size()>0 )	
+						showToast("无效的用户名");
+					}	
+					else if(flag == 411)
 					{
-						int flag = 0;
-						for(int i=0;i<userLogin.size();i++)	
-						{
-							if(userName.getText().toString().equals(userLogin.get(i).getName())&& MD5(password.getText().toString()).equals(userLogin.get(i).getPassword()))
-							{
-								showToast("登录成功");
-								Intent intent = new Intent();
-								intent.setClass(Login.this, UserMenu.class);
-								startActivity(intent);
-								flag = 1;
-							}
-						
-						}
-						if(flag == 0)
-							showToast("用户名或密码错误,请重新输入");
+						showToast("密码错误,请重新输入密码");
 					}
-					else
-						showToast("用户名或密码错误,请重新输入");
-						*/
-					
-					
 				}
-				
-
 			}
 		});
+		
 		btnRegist = (Button) findViewById(R.id.btn_regist);
 		btnRegist.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				Intent intent = new Intent();
 				intent.setClass(Login.this, RegistInfo.class);
 				startActivity(intent);
+				finish();
 
 			}
 		});
 	}
 	
-	// MD5加密，32位 
-		public static String MD5(String str) { 
-			MessageDigest md5 = null; 
-			try { 
-				md5 = MessageDigest.getInstance("MD5"); 
-			} catch (Exception e) { 
-				e.printStackTrace(); 
-				return ""; 
-			} 
-			char[] charArray = str.toCharArray(); 
-			byte[] byteArray = new byte[charArray.length]; 
-			for (int i = 0; i < charArray.length; i++) { 
-				byteArray[i] = (byte) charArray[i]; 
-			} 
-			byte[] md5Bytes = md5.digest(byteArray); 
-			StringBuffer hexValue = new StringBuffer(); 
-			for (int i = 0; i < md5Bytes.length; i++) { 
-				int val = ((int) md5Bytes[i]) & 0xff; 
-				if (val < 16) { 
-					hexValue.append("0"); 
-				} 
-				hexValue.append(Integer.toHexString(val)); 
-		} 
-			return hexValue.toString(); 
-		}
-	
 	//提示类
 	private void showToast(CharSequence msg) {
 		Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
 	}
+	
+	public void onBackPressed() { 
+        super.onBackPressed(); 
+        Intent intent = new Intent();
+		intent.setClass(Login.this, MainActivity.class);
+		startActivity(intent);
+		this.finish();       
+    } 
 	
 	/*public List<UserInfo> getSPUser()
 	{
