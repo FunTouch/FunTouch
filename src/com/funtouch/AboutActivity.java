@@ -1,6 +1,7 @@
 package com.funtouch;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -36,6 +37,7 @@ public class AboutActivity extends Activity {
 	private DataRetriever dataRetriever = new DataRetriever();
 	String cookie = application.getInstance().getCookie();
 	Map<String, Object> tmp = new HashMap<String, Object>();
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -107,12 +109,15 @@ public class AboutActivity extends Activity {
 						tmp.put("actor", spk.getActor());
 						tmp.put("limit", spk.getLimit());					
 						ActDetail.add(tmp);
-						ShowDetails();
-						
+						//ShowDetails();
+						ActDetailsInfo info = new ActDetailsInfo(ActDetail);
+						List<ActDetailsInfo> objectList = new ArrayList<ActDetailsInfo>();
+						objectList.add(info);		
 						//showToast(spk.getOrg());
-						//Intent intent = new Intent();
-						//intent.setClass(AboutActivity.this, ActDetails.class);
-						//startActivity(intent);		
+						Intent intent = new Intent();
+						intent.setClass(AboutActivity.this, ActDetails.class);
+						intent.putExtra("ListObject", (Serializable) objectList);
+						startActivity(intent);		
 			    	}			    	
 			    }
 			}		
@@ -145,7 +150,7 @@ public class AboutActivity extends Activity {
 		adapter1 = new SimpleAdapter(this, ActDetail, R.layout.lsv_act_detail_raw,
 				new String[] {"name", "info", "time","place","type","org","actor","limit"},
 				new int[] {R.id.act_detail_name, R.id.act_detail_info, R.id.act_detail_time,R.id.act_detail_place,R.id.act_detail_type,R.id.act_detail_org,R.id.act_detail_actor,R.id.act_detail_limit});
-		lsvActDetails.setAdapter(adapter1);
+		//lsvActDetails.setAdapter(adapter1);
 		//Intent intent = new Intent();
 		//intent.setClass(AboutActivity.this, ActDetails.class);
 		//startActivity(intent);		
