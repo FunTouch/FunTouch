@@ -19,6 +19,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -62,10 +63,12 @@ public class Login extends Activity {
 		//application = (Data) this.getApplicationContext(); 
 		//userLogin = getSPUser();
 		
-		if(cookie!=null)
+		//验证是否已经登录
+		if(cookie!=null)			
 		{
 			Intent intent = new Intent();
 			intent.setClass(Login.this, UserMenu.class);
+			intent.putExtra("flag", "0");
 			startActivity(intent);
 			this.finish(); 
 		}
@@ -82,6 +85,7 @@ public class Login extends Activity {
 						showToast("登录成功");
 						Intent intent = new Intent();
 						intent.setClass(Login.this, UserMenu.class);
+						intent.putExtra("flag", "0");
 						startActivity(intent);
 						finish();  
 					}
@@ -121,39 +125,7 @@ public class Login extends Activity {
 		startActivity(intent);
 		this.finish();       
     } 
-	
-	/*public List<UserInfo> getSPUser()
-	{
-		List<UserInfo> userInfos = new ArrayList<UserInfo>();// 用于保存用户列表信息
-		String userinfos = read.getString("member", "");// 取得所有用户信息
-		// 获得用户字串
-		if (userinfos != "")// 有数据
-		{
-			// name1/pwd1,name2/pwd2
-			if (userinfos.contains(","))// 判断有无, 逗号代表用户每个用户分割点
-			{
-				String[] users = userinfos.split(",");
-				for (String str : users)
-				{
-					UserInfo userinfo = new UserInfo();
-					String[] user = str.split("/");
-					userinfo.initialize(user[0],(user[1]),user[2],user[3],user[4],user[5],user[6]);// 
-					userInfos.add(userinfo);
-				}
-			} else
-				// 没有, 代表只有一个用户
-			{
-				UserInfo userinfo = new UserInfo();
-				String[] user = userinfos.split("/");
-				userinfo.initialize(user[0],(user[1]),user[2],user[3],user[4],user[5],user[6]);// 
-				userInfos.add(userinfo);
-			}
-			return userInfos;
-	  } else
-	  {
-		  return userInfos;
-	  }
-	}*/
+
 }
 
 

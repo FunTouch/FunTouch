@@ -12,6 +12,7 @@ public class Speaker implements Serializable{
     private String org;
     private String actor;
     private String limit;
+    private String code;
     
     public String getName() {
     	return this.name;
@@ -37,6 +38,9 @@ public class Speaker implements Serializable{
     public String getLimit() {
     	return this.limit;
     }
+    public String getCode() {
+    	return this.code;
+    }
     
     public void setName(String name) {
     	this.name = name;
@@ -61,6 +65,9 @@ public class Speaker implements Serializable{
     }
     public void setActor(String actor) {
     	this.actor = actor;
+    }
+    public void setCode(String code) {
+    	this.code = code;
     }
 
 }

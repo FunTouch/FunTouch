@@ -62,16 +62,65 @@ public class AboutActivity extends Activity {
 		ListView lsvActInfo = (ListView)findViewById(R.id.lsv_act_info);
 				
 		init();
-		int flag = dataRetriever.seeActinfo(cookie);
-		if(flag == 200)
+		
+		//获取活动信息列表
+		listSpeaker = dataRetriever.retrieveAllAct(cookie);
+		if(listSpeaker.get(0).getCode().equals("200"))
 		{
+			Log.i("b",listSpeaker.get(0).getCode());
 			showToast("获取活动信息成功");
+			getData();
+			adapter = new SimpleAdapter(this, listData, R.layout.lsv_act_info_raw,
+					new String[] {"name", "info", "time"},
+					new int[] {R.id.act_name, R.id.act_info, R.id.act_time});
+			lsvActInfo.setAdapter(adapter);
+			
+			//点击活动显示活动详情
+			lsvActInfo.setOnItemClickListener(new OnItemClickListener(){
+				public void onItemClick(AdapterView<?> parent, View view,  
+					     int position, long id) {
+					ListView listView = (ListView)parent; 
+					ActDetail.clear();
+				    HashMap<String, String> map = (HashMap<String, String>) listView.getItemAtPosition(position);
+				    String name = map.get("name");
+				    String info = map.get("info");
+				    for (Iterator<Speaker> it=listSpeaker.iterator(); it.hasNext(); )
+				    {	    	
+				    	Speaker spk = it.next();
+				    	if(name.equals(spk.getName()) && info.equals(spk.getInfo()))
+				    	{
+				    		tmp.put("name", spk.getName());
+							tmp.put("info", spk.getInfo());
+							tmp.put("time", spk.getTime());
+							tmp.put("place", spk.getPlace());
+							tmp.put("type", spk.getType());
+							tmp.put("org", spk.getOrg());
+							tmp.put("actor", spk.getActor());
+							tmp.put("limit", spk.getLimit());					
+							ActDetail.add(tmp);
+
+							ActDetailsInfo info1 = new ActDetailsInfo(ActDetail);		//创建Serializable对象通过intent传递ActDetail
+							List<ActDetailsInfo> objectList = new ArrayList<ActDetailsInfo>();
+							objectList.add(info1);		
+							Intent intent = new Intent();
+							intent.setClass(AboutActivity.this, ActDetails.class);
+							intent.putExtra("ListObject", (Serializable) objectList);
+							startActivity(intent);
+							break;
+				    	}			    	
+				    }
+				}		
+			}); 
 		}
-		else if(flag == 420)
+		else if(listSpeaker.get(0).getCode().equals("null"))
+		{
+			showToast("尚无任何活动");
+		}
+		else if(listSpeaker.get(0).getCode().equals("420"))
 		{
 			showToast("获取活动信息失败");
 		}
-		else if(flag == 404)
+		else if(listSpeaker.get(0).getCode().equals("404"))
 		{
 			showToast("请先登陆");
 			Intent intent = new Intent();
@@ -80,48 +129,7 @@ public class AboutActivity extends Activity {
 			finish();
 		}
 		
-		listSpeaker = dataRetriever.retrieveAllSpeakers(cookie);
-		getData();
-		adapter = new SimpleAdapter(this, listData, R.layout.lsv_act_info_raw,
-				new String[] {"name", "info", "time"},
-				new int[] {R.id.act_name, R.id.act_info, R.id.act_time});
-		lsvActInfo.setAdapter(adapter);
 		
-		lsvActInfo.setOnItemClickListener(new OnItemClickListener(){
-			public void onItemClick(AdapterView<?> parent, View view,  
-				     int position, long id) {
-				ListView listView = (ListView)parent; 
-				ActDetail.clear();
-			    HashMap<String, String> map = (HashMap<String, String>) listView.getItemAtPosition(position);
-			    String name = map.get("name");
-			    for (Iterator<Speaker> it=listSpeaker.iterator(); it.hasNext(); )
-			    {
-			    	
-			    	Speaker spk = it.next();
-			    	if(name.equals(spk.getName()))
-			    	{
-			    		tmp.put("name", spk.getName());
-						tmp.put("info", spk.getInfo());
-						tmp.put("time", spk.getTime());
-						tmp.put("place", spk.getPlace());
-						tmp.put("type", spk.getType());
-						tmp.put("org", spk.getOrg());
-						tmp.put("actor", spk.getActor());
-						tmp.put("limit", spk.getLimit());					
-						ActDetail.add(tmp);
-						//ShowDetails();
-						ActDetailsInfo info = new ActDetailsInfo(ActDetail);
-						List<ActDetailsInfo> objectList = new ArrayList<ActDetailsInfo>();
-						objectList.add(info);		
-						//showToast(spk.getOrg());
-						Intent intent = new Intent();
-						intent.setClass(AboutActivity.this, ActDetails.class);
-						intent.putExtra("ListObject", (Serializable) objectList);
-						startActivity(intent);		
-			    	}			    	
-			    }
-			}		
-		}); 
 			
 		btnCreateAct.setOnClickListener(new OnClickListener() {
 			
@@ -142,18 +150,6 @@ public class AboutActivity extends Activity {
 				startActivity(intent);
 			}
 		});
-	}
-	
-	
-	private void ShowDetails(){
-		ListView lsvActDetails = (ListView)findViewById(R.id.lsv_act_details);
-		adapter1 = new SimpleAdapter(this, ActDetail, R.layout.lsv_act_detail_raw,
-				new String[] {"name", "info", "time","place","type","org","actor","limit"},
-				new int[] {R.id.act_detail_name, R.id.act_detail_info, R.id.act_detail_time,R.id.act_detail_place,R.id.act_detail_type,R.id.act_detail_org,R.id.act_detail_actor,R.id.act_detail_limit});
-		//lsvActDetails.setAdapter(adapter1);
-		//Intent intent = new Intent();
-		//intent.setClass(AboutActivity.this, ActDetails.class);
-		//startActivity(intent);		
 	}
 
 	private void init() {

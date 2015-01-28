@@ -140,17 +140,18 @@ public class DataRetriever extends Activity{
 			String jsonString = EntityUtils.toString(httpEntity);
 			JSONObject object = new JSONObject(jsonString);
 			String code = object.getString("code");
-			JSONObject result = new JSONObject(object.getString("result"));
-			String res = result.getString("cookie");
-			application.getInstance().setCookie(res);          //把cookie信息保存到application		
-			
+			if (code.equals("200"))       //登陆成功
+			{
+				JSONObject result = new JSONObject(object.getString("result"));
+				String res = result.getString("cookie");
+				application.getInstance().setCookie(res);     //把cookie信息保存到application
+				application.getInstance().setName(name);
+				return 200;
+			}		
 			//JSONObject jsonObj = jsonArray.getJSONObject(1);
 			//String res = jsonArray.getString(0);
 			Log.i("login", code);	
-			//Log.i("b", application.getInstance().getCookie());	
-			
-			if (code.equals("200"))      //登陆成功
-				return 200;
+			//Log.i("b", application.getInstance().getCookie());				
 			if (code.equals("410"))      //无效用户名
 				return 410;
 			if (code.equals("411"))      //密码错误
@@ -175,16 +176,15 @@ public class DataRetriever extends Activity{
 	
 			String url = "http://pyfun.sinaapp.com/act/create";
 			
-			//JSONObject tableAct ;
-			StringBuffer sb = new StringBuffer();  
-			
+			//打包JSON字符串
+			StringBuffer sb = new StringBuffer();  	
 			sb.append("{"+"\"cookie\":"+"\""+cookie+"\""+","+"\"data\":");
 			sb.append("{"+"\"name\":"+"\""+name+"\""+","+"\"info\":"+"\""+info+"\""+","+"\"time\":"+"\""+time+"\""+","
 					+"\"place\":"+"\""+place+"\""+","+"\"type\":"+"\""+type+"\""+","+"\"org\":"+"\""+org+"\""+
 					","+"\"actor\":"+"\""+actor+"\""+","+"\"limit\":"+"\""+limit+"\""+"}");
-			//sb.deleteCharAt(sb.length()-1);
-			sb.append("}");                 			//JSON字符串打包完毕
+			sb.append("}");                 			
 			
+			//POST活动信息到URL
 			List <NameValuePair> params = new ArrayList <NameValuePair>();
 			params.add(new BasicNameValuePair("post", sb.toString()));
 			
@@ -224,57 +224,8 @@ public class DataRetriever extends Activity{
 			return 0;
 		}
 		
-		//简要活动信息
-		public int seeActinfo(String cookie){
-			
-			String url = "http://pyfun.sinaapp.com/act/myact";
-			
-			List <NameValuePair> params = new ArrayList <NameValuePair>();
-			params.add(new BasicNameValuePair("cookie", cookie));
-			
-			HttpPost httpPost = new HttpPost(url);
-			
-			HttpClient httpClient = new DefaultHttpClient();
-			try {
-
-				httpPost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
-				HttpResponse httpResponse = httpClient.execute(httpPost);
-				HttpEntity httpEntity = httpResponse.getEntity();
-
-				String jsonString = EntityUtils.toString(httpEntity);
-				JSONObject object = new JSONObject(jsonString);
-				
-				String rows = object.getString("message");
-				String code = object.getString("code");
-				//String res = object.getString("result");
-				
-				//JSONArray jsonArray = new JSONArray(jsonString);
-				//JSONArray result = new JSONArray(info);
-				
-				Log.i("b", code);	
-				
-				if (code.equals("200"))      //获取活动成功
-					return 200;
-				if (code.equals("420"))      //获取失败
-					return 420;
-				if (code.equals("404"))      //用户未登陆
-					return 404;
-				
-			} catch (ClientProtocolException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			return 0;
-		}
-		//添加活动信息到Speaker
-		public List<Speaker> retrieveAllSpeakers(String cookie) {
+		//获取活动信息并添加到Speaker
+		public List<Speaker> retrieveAllAct(String cookie) {
 			String url = "http://pyfun.sinaapp.com/act/myact";
 			List<Speaker> speakerArrayList = new ArrayList<Speaker>();
 			HttpPost httpPost = new HttpPost(url);
@@ -289,17 +240,30 @@ public class DataRetriever extends Activity{
 				
 				String jsonString = EntityUtils.toString(httpEntity);
 				JSONObject object = new JSONObject(jsonString);		
-				String res = object.getString("result");
+				//String res = object.getString("result");
+				String code = object.getString("code");
+				//Log.i("Act", code);
 				
-				Log.i("b", res);	
-				JSONArray jsonArray = new JSONArray(res);
-				Speaker speaker;
+				if(code.equals("200"))
+				{			
+					String res = object.getString("result");
+					if(res.equals("[]"))
+					{
+						Speaker speaker;
+						speaker = new Speaker();
+						speaker.setCode("null");
+						speakerArrayList.add(speaker);
+					}
+					else{
+					JSONArray jsonArray = new JSONArray(object.getString("result"));
+					Speaker speaker;
 				
-				for (int i = 0; i < jsonArray.length(); i++) {
+					for (int i = 0; i < jsonArray.length(); i++) {
 
 					JSONObject jsonObj = jsonArray.getJSONObject(i);
 					speaker = new Speaker();
 
+					speaker.setCode(code);
 					speaker.setName(jsonObj.getString("name"));
 					speaker.setInfo(jsonObj.getString("info"));
 					speaker.setTime(jsonObj.getString("time"));
@@ -310,7 +274,16 @@ public class DataRetriever extends Activity{
 					speaker.setLimit(jsonObj.getString("limit"));
 
 					speakerArrayList.add(speaker);
+					}
 
+					}
+				}
+				else if(code.equals("420")||code.equals("404"))
+				{
+					Speaker speaker;
+					speaker = new Speaker();
+					speaker.setCode(code);
+					speakerArrayList.add(speaker);
 				}
 
 			} catch (ClientProtocolException e) {

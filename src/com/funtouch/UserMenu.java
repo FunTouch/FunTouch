@@ -1,5 +1,8 @@
 package com.funtouch;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,6 +25,8 @@ public class UserMenu extends Activity{
 	private Button btnLogoff = null;
 	public Cookie application ; 
 	String cookie = application.getInstance().getCookie();
+	private String name;
+	List<ActDetailsInfo> objectList = new ArrayList<ActDetailsInfo>();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +36,8 @@ public class UserMenu extends Activity{
 		setContentView(R.layout.user_menu);
 		 
 		init();
+		objectList = (List<ActDetailsInfo>) getIntent().getSerializableExtra("ListObject");
+		
 		btnLogoff = (Button) findViewById(R.id.btn_logoff);
 		
 		btnLogoff.setOnClickListener(new OnClickListener(){
@@ -37,7 +45,7 @@ public class UserMenu extends Activity{
 
         		application.getInstance().setCookie(null);    		
         		Intent intent=new Intent();
-        		intent.setClass(UserMenu.this, MainActivity.class);
+        		intent.setClass(UserMenu.this, MainActivity.class);	
         		startActivity(intent);
         		finish();
         	}
@@ -58,7 +66,6 @@ public class UserMenu extends Activity{
 	        		Intent intent=new Intent();
 	        		intent.setClass(UserMenu.this, SignUpClickAdd.class);
 	        		startActivity(intent);
-	        		finish();
 		
 	        	}
 	        });
@@ -93,11 +100,16 @@ public class UserMenu extends Activity{
 	
 	@Override 
     public void onBackPressed() { 
+		Intent intent = getIntent();
+		String flag = intent.getStringExtra("flag");
         super.onBackPressed(); 
-        Intent intent = new Intent();
-		intent.setClass(UserMenu.this, MainActivity.class);
-		startActivity(intent);
-		this.finish();       
+        if(flag.equals("0"))
+        {
+        	Intent intent1 = new Intent();
+        	intent1.setClass(UserMenu.this, MainActivity.class);
+        	startActivity(intent1);
+        	this.finish();
+        }
     } 
 	 
 }

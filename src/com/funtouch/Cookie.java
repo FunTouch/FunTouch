@@ -15,6 +15,8 @@ public class Cookie extends Application{
 	}
 
 	private String cookie;
+	private String name;
+	
 	public List<UserInfo> info = new ArrayList<UserInfo>(); 
 	public void onCreate() { 
         super.onCreate(); 
@@ -28,12 +30,18 @@ public class Cookie extends Application{
 	public void setCookie(String s){
 		this.cookie=s;
 	}
+	public void setName(String s){
+		this.name=s;
+	}
 	
 	public List<UserInfo> getInfo(){
 		return info;
 	}
 	public String getCookie(){
 		return cookie;
+	}
+	public String getName(){
+		return name;
 	}
 }
 

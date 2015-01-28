@@ -3,6 +3,8 @@ package com.funtouch;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,6 +14,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
+	public Cookie application ; 
 
 	private static boolean isSocialFirstUse = true;
 	
@@ -22,10 +25,13 @@ public class MainActivity extends Activity {
 	private Button btnGame = null;
 	private Button btnLogin = null;
 	private long temptime = 0;
+	String cookie = application.getInstance().getCookie();
+	String name = application.getInstance().getName();
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) {	
 		super.onCreate(savedInstanceState);
+     
 		setContentView(R.layout.activity_main);
 
 		init();
@@ -81,6 +87,10 @@ public class MainActivity extends Activity {
 				finish();
 			}
 		});
+		if(cookie!=null)
+		{
+			btnLogin.setText(name);
+		}
 	}
 
 	private void init() {
@@ -98,6 +108,7 @@ public class MainActivity extends Activity {
 		isSocialFirstUse = status;
 	}
 	
+	//Ë«»÷·µ»Ø¼üÍË³ö
 	public boolean onKeyDown(int keyCode, KeyEvent event)   
 	{  
 	    // TODO Auto-generated method stub  	

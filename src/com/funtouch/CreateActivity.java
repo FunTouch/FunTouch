@@ -38,7 +38,6 @@ public class CreateActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.create_activity);
 		
-		//init();
 		Button btnCreateAct = null;
 		
 		name = (EditText) findViewById(R.id.edt_ActName);
@@ -69,6 +68,7 @@ public class CreateActivity extends Activity{
 						Intent intent = new Intent();
 						intent.setClass(CreateActivity.this, AboutActivity.class);
 						startActivity(intent);
+						finish();
 					}
 					else if(flag == 420)
 					{
@@ -80,17 +80,13 @@ public class CreateActivity extends Activity{
 						Intent intent = new Intent();
 						intent.setClass(CreateActivity.this, Login.class);
 						startActivity(intent);
+						finish();
 					}
 				}
 			}
 		});
 		
-		
-		
-	}
-	
-	
-	
+	}	
 	
 	//Ã· æ¿‡
 		private void showToast(CharSequence msg) {
